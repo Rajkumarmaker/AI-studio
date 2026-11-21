@@ -253,3 +253,20 @@ $("export-projects").addEventListener("click",()=>{
   const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="ai-studio-projects.json"; a.click(); URL.revokeObjectURL(url); $("project-status").textContent="Project backup exported. Keep the JSON file somewhere safe.";
 });
 renderProjects();
+
+
+// Progressive Web App install support.
+let deferredInstallPrompt = null;
+const installButton = document.getElementById("install-app");
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault(); deferredInstallPrompt = event;
+  if (installButton) installButton.hidden = false;
+});
+if (installButton) installButton.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) { $("project-status") && ($("project-status").textContent = "On Android Chrome, open the browser menu and choose Install app or Add to Home screen."); return; }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null; installButton.hidden = true;
+});
+window.addEventListener("appinstalled", () => { if (installButton) installButton.hidden = true; });
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
