@@ -184,7 +184,7 @@ $("text-generate").addEventListener("click", async () => {
   const button=$("text-generate"); button.disabled=true; button.textContent="Generating — please wait…";
   $("text-result").textContent="Sending request to the video model. This may take a few minutes…"; $("text-video-output").replaceChildren();
   const duration=Number($("text-duration").value), ratio=$("text-ratio").value;
-  if(!confirm("Paid AI video generation\n\nModel: MiniMax H3 Max Turbo\nLength: "+duration+" seconds\nFormat: "+ratio+"\n\nfal.ai may charge your account for a successful output. Check current pricing and credits before continuing. Send generation request?")) return;
+  if(!confirm("Paid AI video generation\n\nModel: MiniMax H3 Max Turbo\nLength: "+duration+" seconds\nFormat: "+ratio+"\n\nfal.ai may charge your account for a successful output. Check current pricing and credits before continuing. Send generation request?")) { button.disabled=false; button.textContent="Generate real AI video · paid"; $("text-result").textContent="Generation cancelled. No request was sent."; return; }
   try { const data=await generateVideoRequest({prompt,duration,aspectRatio:ratio}); showGeneratedVideo("text-video-output",data.videoUrl); $("text-result").textContent="Your AI video is ready."; }
   catch(e){$("text-result").textContent=e.message;}
   finally{button.disabled=false;button.textContent="Generate real AI video · paid";}
