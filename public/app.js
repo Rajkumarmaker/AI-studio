@@ -2,7 +2,7 @@ const $ = (id) => document.getElementById(id);
 // The Android app bundles its interface locally; only API calls go to Render.
 const API_BASE = window.Capacitor?.isNativePlatform?.() ? "https://ai-studio-dileep.onrender.com" : "";
 const views = ["studio", "assistant", "editor", "text", "image", "free", "earn", "projects"];
-const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
+const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Create",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
 let imageUrl = null;
 let musicUrl = null;
@@ -30,7 +30,7 @@ function showView(name) {
 }
 document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => showView(b.dataset.go)));
 document.querySelectorAll("[data-section]").forEach(b => b.addEventListener("click", () => showView(b.dataset.section)));
-$("new-project").addEventListener("click", () => { $("idea").value = ""; $("assistant-output").textContent = "Your script, storyboard and prompts will appear here."; $("assistant-output").classList.add("empty"); showView("assistant"); });
+$("new-project").addEventListener("click", () => { showView("editor"); });
 
 async function checkHealth() {
   try {
