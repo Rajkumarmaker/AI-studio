@@ -1,0 +1,13 @@
+{
+  "appId": "com.dileep.aistudio",
+  "appName": "AI-Studio",
+  "webDir": "public",
+  "server": {
+    "url": "https://ai-studio-dileep.onrender.com",
+    "cleartext": false,
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
