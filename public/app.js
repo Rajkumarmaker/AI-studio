@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
-const views = ["studio", "assistant", "editor", "text", "image"];
-const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner"};
+const views = ["studio", "assistant", "editor", "text", "image", "free", "earn"];
+const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio"};
 let videoUrl = null;
 let imageUrl = null;
 
@@ -198,4 +198,14 @@ $("image-generate").addEventListener("click", async () => {
     const data=await generateVideoRequest({prompt,image,duration:5,aspectRatio:"16:9"}); showGeneratedVideo("image-video-output",data.videoUrl); $("image-result").textContent="Your image-to-video clip is ready.";
   } catch(e){$("image-result").textContent=e.message;}
   finally{button.disabled=false;button.textContent="Generate real AI video · paid";}
+});
+
+$("free-prompt-build").addEventListener("click",()=>{
+ const idea=$("free-prompt-idea").value.trim();
+ if(!idea){$("free-prompt-result").textContent="Enter a video idea first.";return;}
+ const format=$("free-prompt-format").value;
+ $("free-prompt-result").textContent="Create a "+format+". Concept: "+idea+". Generate a coherent cinematic sequence with a clear subject, realistic movement, natural lighting, detailed environment, stable camera motion, consistent subject appearance and clean composition. Avoid flicker, morphing, extra limbs, distorted objects, text artifacts, abrupt cuts and unnatural motion. Keep the first and last frames visually clean.";
+});
+$("free-prompt-copy").addEventListener("click",async()=>{
+ try{await navigator.clipboard.writeText($("free-prompt-result").textContent);$("free-prompt-copy").textContent="Copied ✓";}catch{$("free-prompt-copy").textContent="Select and copy the prompt";}
 });
