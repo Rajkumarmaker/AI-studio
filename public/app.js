@@ -4,7 +4,8 @@ const API_BASE = window.Capacitor?.isNativePlatform?.() ? "https://ai-studio-dil
 const views = ["studio", "assistant", "editor", "text", "image", "free", "earn", "projects"];
 const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
-let imageUrl = null;\nlet musicUrl = null;\nlet musicContext = null;\nlet musicSource = null;\nlet musicGain = null;\nlet musicDestination = null;\nconst musicAudio = new Audio();
+let imageUrl = null;
+let musicUrl = null;\nlet musicContext = null;\nlet musicSource = null;\nlet musicGain = null;\nlet musicDestination = null;\nconst musicAudio = new Audio();
 
 function showGeneratedVideo(containerId, url) {
   const container = $(containerId); container.replaceChildren();
@@ -184,6 +185,17 @@ $("export-video").addEventListener("click", async () => {
   } catch {}
   const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm";
   const recorder = new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5000000});
+  if(musicUrl){
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)throw new Error("Audio mixing is not supported in this browser.");
+    if(!musicContext){
+      musicContext=new AudioCtx();musicSource=musicContext.createMediaElementSource(musicAudio);
+      musicGain=musicContext.createGain();musicDestination=musicContext.createMediaStreamDestination();
+      musicSource.connect(musicGain);musicGain.connect(musicDestination);
+    }
+    musicGain.gain.value=Number($("music-volume").value)||0.65;
+    musicDestination.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+  }
   const chunks=[];
   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
   const finished = new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=reject;});
@@ -208,6 +220,7 @@ $("export-video").addEventListener("click", async () => {
   try {
     video.pause(); video.playbackRate=Number($("video-speed").value)||1; video.currentTime=start;
     await new Promise(resolve=>video.addEventListener("seeked",resolve,{once:true}));
+    if(musicUrl){await musicContext.resume();musicAudio.currentTime=0;await musicAudio.play();}
     recorder.start(250);
     const renderFrame = () => { if(video.currentTime>=end || video.ended){recorder.stop();return;} draw(); requestAnimationFrame(renderFrame); };
     draw(); video.play(); requestAnimationFrame(renderFrame);
@@ -221,7 +234,7 @@ $("export-video").addEventListener("click", async () => {
   } finally {
     if(sourceStream) sourceStream.getTracks().forEach(t=>t.stop());
     stream.getTracks().forEach(t=>t.stop());
-    button.disabled=false;button.textContent="Export trimmed WebM";
+    musicAudio.pause();button.disabled=false;button.textContent="Export video";
   }
 });
 
