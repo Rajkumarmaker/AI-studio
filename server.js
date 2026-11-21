@@ -3,6 +3,7 @@ import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
+import { fal } from "@fal-ai/client";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -16,7 +17,7 @@ app.get("/api/health", (_req, res) => {
     ok: true,
     app: "AI-Studio",
     assistantConfigured: Boolean(process.env.OPENAI_API_KEY),
-    videoGeneration: "provider-not-configured"
+    videoGeneration: process.env.FAL_KEY ? "fal-ai-configured" : "needs-fal-key"
   });
 });
 
@@ -97,6 +98,32 @@ app.post("/api/image-prompt", async (req, res) => {
   } catch (error) {
     console.error("Image prompt error:", error?.message || error);
     res.status(502).json({ error: "Image analysis failed. Check the OpenAI key, billing and model access." });
+  }
+});
+
+
+app.post("/api/generate-video", async (req, res) => {
+  if (!process.env.FAL_KEY) return res.status(503).json({ error: "AI video generation is not connected yet. Add FAL_KEY in Render Environment. No video has been generated or charged.", setup: true });
+  const prompt = String(req.body?.prompt || "").trim();
+  const image = req.body?.image;
+  const duration = Number(req.body?.duration || 5);
+  const aspectRatio = String(req.body?.aspectRatio || "16:9");
+  const allowedRatios = new Set(["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"]);
+  if (!prompt) return res.status(400).json({ error: "Please enter a video prompt first." });
+  if (prompt.length > 4000) return res.status(400).json({ error: "Prompt is too long. Keep it under 4,000 characters." });
+  if (![5, 10].includes(duration)) return res.status(400).json({ error: "Choose a 5- or 10-second clip." });
+  if (!allowedRatios.has(aspectRatio)) return res.status(400).json({ error: "Unsupported aspect ratio." });
+  if (image && (typeof image !== "string" || !/^data:image\/(png|jpeg|webp);base64,/.test(image) || image.length > 7_000_000)) return res.status(400).json({ error: "Choose a PNG, JPG or WEBP image under about 5 MB." });
+  try {
+    fal.config({ credentials: process.env.FAL_KEY });
+    const input = { prompt, duration, resolution: "768P", aspect_ratio: aspectRatio, enable_safety_checker: true, prompt_expansion_mode: "balanced", ...(image ? { image_url: image } : {}) };
+    const result = await fal.subscribe(image ? "minimax/h3-max-turbo/image-to-video" : "minimax/h3-max-turbo/text-to-video", { input, logs: false });
+    const videoUrl = result?.data?.video?.url;
+    if (!videoUrl) throw new Error("The provider returned no video URL.");
+    res.json({ videoUrl, requestId: result.requestId, duration, model: "MiniMax H3 Max Turbo" });
+  } catch (error) {
+    console.error("Video generation error:", error?.message || error);
+    res.status(502).json({ error: "Video generation failed. Check FAL_KEY, fal.ai credits and model availability." });
   }
 });
 
