@@ -4,6 +4,16 @@ const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:
 let videoUrl = null;
 let imageUrl = null;
 
+function showGeneratedVideo(containerId, url) {
+  const container = $(containerId); container.replaceChildren();
+  const video = document.createElement("video"); video.src=url; video.controls=true; video.playsInline=true; video.preload="metadata";
+  const link = document.createElement("a"); link.href=url; link.target="_blank"; link.rel="noopener noreferrer"; link.textContent="Open / download generated MP4";
+  container.append(video,link);
+}
+async function generateVideoRequest(payload) {
+  const response=await fetch("/api/generate-video",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const data=await response.json(); if(!response.ok) throw new Error(data.error||"Video generation failed."); return data;
+}
 function showView(name) {
   views.forEach(v => $("view-" + v).classList.toggle("active", v === name));
   document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.section === name));
@@ -165,4 +175,26 @@ $("export-video").addEventListener("click", async () => {
     stream.getTracks().forEach(t=>t.stop());
     button.disabled=false;button.textContent="Export trimmed WebM";
   }
+});
+
+
+$("text-generate").addEventListener("click", async () => {
+  const prompt=$("text-idea").value.trim(); if(!prompt){$("text-result").textContent="Describe your video first.";return;}
+  const button=$("text-generate"); button.disabled=true; button.textContent="Generating — please wait…";
+  $("text-result").textContent="Sending request to the video model. This may take a few minutes…"; $("text-video-output").replaceChildren();
+  try { const data=await generateVideoRequest({prompt,duration:Number($("text-duration").value),aspectRatio:$("text-ratio").value}); showGeneratedVideo("text-video-output",data.videoUrl); $("text-result").textContent="Your AI video is ready."; }
+  catch(e){$("text-result").textContent=e.message;}
+  finally{button.disabled=false;button.textContent="Generate real AI video · paid";}
+});
+$("image-generate").addEventListener("click", async () => {
+  const file=$("image-file").files[0]; if(!file){$("image-result").textContent="Choose an image first.";return;}
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){$("image-result").textContent="Choose a PNG, JPG or WEBP image.";return;}
+  const button=$("image-generate"); button.disabled=true; button.textContent="Generating — please wait…"; $("image-video-output").replaceChildren();
+  $("image-result").textContent="Sending your image and motion prompt to the video model…";
+  try {
+    const image=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("Could not read image."));reader.readAsDataURL(file);});
+    const prompt=$("motion-prompt").value.trim()||"Animate the visible scene naturally with cinematic camera movement.";
+    const data=await generateVideoRequest({prompt,image,duration:5,aspectRatio:"16:9"}); showGeneratedVideo("image-video-output",data.videoUrl); $("image-result").textContent="Your image-to-video clip is ready.";
+  } catch(e){$("image-result").textContent=e.message;}
+  finally{button.disabled=false;button.textContent="Generate real AI video · paid";}
 });
