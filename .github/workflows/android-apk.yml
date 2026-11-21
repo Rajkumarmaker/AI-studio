@@ -6,6 +6,9 @@ on:
     paths:
       - 'capacitor.config.json'
       - 'package.json'
+      - 'public/icons/app-icon.svg'
+      - 'public/manifest.webmanifest'
+      - 'public/index.html'
       - '.github/workflows/android-apk.yml'
 jobs:
   build-debug-apk:
