@@ -2,11 +2,6 @@
   "appId": "com.dileep.aistudio",
   "appName": "4K AI-Studio",
   "webDir": "public",
-  "server": {
-    "url": "https://ai-studio-dileep.onrender.com",
-    "cleartext": false,
-    "androidScheme": "https"
-  },
   "android": {
     "allowMixedContent": false
   }
