@@ -5,7 +5,12 @@ const views = ["studio", "assistant", "editor", "text", "image", "free", "earn",
 const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
 let imageUrl = null;
-let musicUrl = null;\nlet musicContext = null;\nlet musicSource = null;\nlet musicGain = null;\nlet musicDestination = null;\nconst musicAudio = new Audio();
+let musicUrl = null;
+let musicContext = null;
+let musicSource = null;
+let musicGain = null;
+let musicDestination = null;
+const musicAudio = new Audio();
 
 function showGeneratedVideo(containerId, url) {
   const container = $(containerId); container.replaceChildren();
