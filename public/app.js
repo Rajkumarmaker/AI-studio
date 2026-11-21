@@ -174,10 +174,22 @@ $("export-video").addEventListener("click", async () => {
   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
   const finished = new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=reject;});
   const draw = () => {
-    const w=canvas.width,h=canvas.height, vw=video.videoWidth,vh=video.videoHeight;
+    const vw=video.videoWidth,vh=video.videoHeight,ratio=$("aspect").value;
+    canvas.width=ratio==="9:16"?720:ratio==="1:1"?900:1280;
+    canvas.height=ratio==="9:16"?1280:ratio==="1:1"?900:720;
+    const w=canvas.width,h=canvas.height;
     ctx.fillStyle="#05070d";ctx.fillRect(0,0,w,h);
-    const scale=Math.min(w/vw,h/vh), dw=vw*scale,dh=vh*scale;
-    ctx.drawImage(video,(w-dw)/2,(h-dh)/2,dw,dh);
+    const scale=Math.min(w/vw,h/vh),dw=vw*scale,dh=vh*scale;
+    ctx.save();ctx.filter=$("video-filter").value||"none";
+    ctx.drawImage(video,(w-dw)/2,(h-dh)/2,dw,dh);ctx.restore();
+    const caption=$("overlay-text").value.trim();
+    if(caption){
+      const size=Math.max(28,Math.round(w*.055));ctx.font="700 "+size+"px Arial";
+      ctx.textAlign="center";ctx.textBaseline="middle";
+      const pos=$("overlay-position").value,y=pos==="top"?h*.12:pos==="center"?h*.5:h*.88;
+      ctx.lineWidth=Math.max(4,size*.16);ctx.strokeStyle="rgba(0,0,0,.82)";
+      ctx.fillStyle="#fff";ctx.strokeText(caption,w/2,y,w*.86);ctx.fillText(caption,w/2,y,w*.86);
+    }
   };
   try {
     video.pause(); video.playbackRate=Number($("video-speed").value)||1; video.currentTime=start;
