@@ -73,13 +73,28 @@
         </div>
       </section>
 
-      <section class="view" id="view-editor">
-        <div class="section-heading"><div><span class="eyebrow">POST-PRODUCTION</span><h3>Browser video editor</h3><p class="muted">Add a video from your device, set a trim range and export a WebM clip.</p></div><label class="upload-button">＋ Add video<input id="video-file" type="file" accept="video/*" hidden></label></div>
-        <div class="editor-layout">
-          <div class="panel preview-panel"><div class="preview-top"><span>PREVIEW MONITOR</span><span id="video-meta">No media loaded</span></div><div class="preview-stage" id="preview-stage"><div class="empty-preview"><span>▶</span><b>Your preview appears here</b><small>Choose a video file to begin</small></div><video id="preview-video" controls playsinline></video></div><div class="preview-controls"><button class="ghost" id="play-video">▶ Play</button><span id="time-display">00:00 / 00:00</span><select id="aspect"><option>16:9</option><option>9:16</option><option>1:1</option></select></div></div>
-          <div class="panel edit-panel"><span class="eyebrow">CLIP SETTINGS</span><h4>Trim your video</h4><div class="field"><label for="trim-start">Start time (seconds)</label><input id="trim-start" type="number" min="0" step="0.1" value="0"></div><div class="field"><label for="trim-end">End time (seconds)</label><input id="trim-end" type="number" min="0" step="0.1" value="0"></div><label class="check-row"><input id="mute-video" type="checkbox"> Mute original audio</label><button class="primary full" id="export-video" disabled>Export trimmed WebM</button><p class="helper" id="export-status">Export runs in this browser. Keep this tab open until it finishes.</p><a id="download-link" class="download-link" hidden>Download exported video ↓</a></div>
+      <section class="view create-view" id="view-editor">
+        <div class="create-heading"><div><span class="eyebrow">4K AI-STUDIO CREATE</span><h3>Make your video</h3><p class="muted">Edit clips, add titles and prepare vertical Shorts.</p></div><label class="upload-button">＋ Import video<input id="video-file" type="file" accept="video/*" hidden></label></div>
+        <div class="create-workbench">
+          <div class="create-preview-column">
+            <div class="create-preview-wrap">
+              <div class="create-preview-top"><span>PREVIEW</span><span id="video-meta">No media loaded</span></div>
+              <div class="preview-stage" id="preview-stage"><div class="empty-preview"><span>▶</span><b>Your video preview</b><small>Import a clip to start editing</small></div><video id="preview-video" controls playsinline></video></div>
+              <div class="preview-controls"><button class="ghost" id="play-video">▶ Play / Pause</button><span id="time-display">00:00 / 00:00</span><select id="aspect"><option>9:16</option><option>16:9</option><option>1:1</option></select></div>
+            </div>
+            <div class="panel timeline-panel"><div class="output-head"><div><span class="eyebrow">EDIT TIMELINE</span><h4>Video track</h4></div><span class="muted" id="timeline-label">Waiting for media</span></div><div class="timeline-track"><div class="track-label">V1</div><div class="track-content" id="track-content"><span>Import a clip to populate the timeline</span></div></div><div class="timeline-actions"><button class="ghost" id="mark-split" disabled>✂ Add split marker</button><span id="split-status">Move the playhead, then mark a cut.</span></div><div id="split-markers" class="split-markers"></div></div>
+          </div>
+          <aside class="create-tools">
+            <div class="panel create-tool-panel"><span class="eyebrow">QUICK TOOLS</span><div class="create-tool-grid"><button class="create-tool active" data-edit-tool="trim"><span>✂</span>Trim</button><button class="create-tool" data-edit-tool="text"><span>T</span>Text</button><button class="create-tool" data-edit-tool="filter"><span>◐</span>Filters</button><button class="create-tool" data-edit-tool="speed"><span>↗</span>Speed</button></div></div>
+            <div class="panel edit-panel create-settings">
+              <div class="edit-tool-pane active" data-tool-pane="trim"><span class="eyebrow">TRIM CLIP</span><h4>Set clip range</h4><div class="field"><label for="trim-start">Start time (seconds)</label><input id="trim-start" type="number" min="0" step="0.1" value="0"></div><div class="field"><label for="trim-end">End time (seconds)</label><input id="trim-end" type="number" min="0" step="0.1" value="0"></div><label class="check-row"><input id="mute-video" type="checkbox"> Mute original audio</label></div>
+              <div class="edit-tool-pane" data-tool-pane="text"><span class="eyebrow">TEXT OVERLAY</span><h4>Add a title</h4><div class="field"><label for="overlay-text">Text on video</label><input id="overlay-text" type="text" maxlength="80" placeholder="Type your title or caption"></div><div class="field"><label for="overlay-position">Position</label><select id="overlay-position"><option value="bottom">Bottom</option><option value="center">Center</option><option value="top">Top</option></select></div></div>
+              <div class="edit-tool-pane" data-tool-pane="filter"><span class="eyebrow">LOOK & FEEL</span><h4>Video filter</h4><div class="field"><label for="video-filter">Choose a look</label><select id="video-filter"><option value="none">Original</option><option value="contrast(1.15) saturate(1.2)">Vivid</option><option value="grayscale(1)">B&amp;W</option><option value="sepia(.55) contrast(1.05)">Vintage</option><option value="brightness(1.12) saturate(.85)">Soft</option></select></div></div>
+              <div class="edit-tool-pane" data-tool-pane="speed"><span class="eyebrow">MOTION</span><h4>Playback speed</h4><div class="field"><label for="video-speed">Speed</label><select id="video-speed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1× Normal</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div></div>
+              <button class="primary full" id="export-video" disabled>Export video</button><p class="helper" id="export-status">Export runs on your device. Keep this screen open while rendering.</p><a id="download-link" class="download-link" hidden>Download exported video ↓</a>
+            </div>
+          </aside>
         </div>
-        <div class="panel timeline-panel"><div class="output-head"><div><span class="eyebrow">TIMELINE</span><h4>Video track</h4></div><span class="muted" id="timeline-label">Waiting for media</span></div><div class="timeline-track"><div class="track-label">V1</div><div class="track-content" id="track-content"><span>Import a clip to populate the timeline</span></div></div></div>
       </section>
 
       <section class="view" id="view-text">
