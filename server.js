@@ -60,6 +60,46 @@ app.post("/api/assistant", async (req, res) => {
   }
 });
 
+
+app.post("/api/image-prompt", async (req, res) => {
+  const image = req.body?.image;
+  const motion = String(req.body?.motion || "Natural, cinematic movement").trim();
+  const camera = String(req.body?.camera || "Slow cinematic push-in").trim();
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(503).json({ error: "Image understanding needs an OpenAI API key. Add OPENAI_API_KEY in Render Environment.", setup: true });
+  }
+  if (typeof image !== "string" || !/^data:image\/(png|jpeg|webp|gif);base64,/.test(image)) {
+    return res.status(400).json({ error: "Upload a PNG, JPG, WEBP or GIF image first." });
+  }
+  if (image.length > 7_000_000) {
+    return res.status(413).json({ error: "Image is too large. Please choose an image under about 5 MB." });
+  }
+  try {
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      input: [{
+        role: "user",
+        content: [
+          { type: "input_text", text: [
+            "Analyze this uploaded image and write a production-ready image-to-video generation prompt.",
+            "Describe only visible details; preserve the identity, clothing, anatomy, objects and scene composition.",
+            "Motion requested: " + motion,
+            "Camera movement: " + camera,
+            "Return: (1) main animation prompt, (2) camera and motion timing, (3) continuity instructions, (4) negative prompt.",
+            "Do not claim to have generated a video file."
+          ].join("\n") },
+          { type: "input_image", image_url: image, detail: "high" }
+        ]
+      }]
+    });
+    res.json({ result: response.output_text || "No prompt returned. Please try again." });
+  } catch (error) {
+    console.error("Image prompt error:", error?.message || error);
+    res.status(502).json({ error: "Image analysis failed. Check the OpenAI key, billing and model access." });
+  }
+});
+
 app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
