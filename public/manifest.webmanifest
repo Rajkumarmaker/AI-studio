@@ -1,0 +1,19 @@
+{
+  "name": "AI-Studio 4K",
+  "short_name": "AI-Studio",
+  "description": "AI video creator and editing workspace",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#090d1b",
+  "theme_color": "#090d1b",
+  "icons": [
+    {
+      "src": "/icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
