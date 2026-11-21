@@ -74,10 +74,24 @@ $("image-file").addEventListener("change", () => {
 $("image-plan").addEventListener("click", async () => {
   const file = $("image-file").files[0];
   if (!file) { $("image-result").textContent = "Choose an image first."; return; }
-  const idea = "Create an image-to-video animation prompt for this image: " + $("motion-prompt").value + ". Camera: " + $("camera-motion").value + ". Include subject continuity, natural movement, lighting, and a negative prompt.";
-  $("image-result").textContent = "Preparing animation prompt…";
-  try { $("image-result").textContent = await requestAssistant(idea,"scenes",5,"photorealistic image animation"); }
-  catch(e) { $("image-result").textContent = e.message; }
+  $("image-result").textContent = "Analyzing your image and preparing a tailored animation prompt…";
+  const button = $("image-plan"); button.disabled = true;
+  try {
+    const imageData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Could not read this image."));
+      reader.readAsDataURL(file);
+    });
+    const response = await fetch("/api/image-prompt", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: imageData, motion: $("motion-prompt").value, camera: $("camera-motion").value })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Image analysis failed.");
+    $("image-result").textContent = data.result;
+  } catch(e) { $("image-result").textContent = e.message; }
+  finally { button.disabled = false; }
 });
 
 const video = $("preview-video");
