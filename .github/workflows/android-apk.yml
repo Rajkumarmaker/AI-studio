@@ -1,4 +1,4 @@
-name: Build AI-Studio Android APK
+name: Build 4K AI-Studio Android APK
 on:
   workflow_dispatch:
   push:
