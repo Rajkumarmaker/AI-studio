@@ -145,6 +145,14 @@ document.querySelectorAll("[data-edit-tool]").forEach(button => button.addEventL
 }));
 $("video-speed").addEventListener("change", () => { video.playbackRate=Number($("video-speed").value)||1; });
 $("video-filter").addEventListener("change", () => { video.style.filter=$("video-filter").value; });
+function updateCaptionPreview() {
+  const caption=$("overlay-text").value.trim(), overlay=$("preview-caption");
+  overlay.textContent=caption; overlay.hidden=!caption;
+  overlay.className="preview-caption pos-"+$("overlay-position").value;
+}
+$("overlay-text").addEventListener("input",updateCaptionPreview);
+$("overlay-position").addEventListener("change",updateCaptionPreview);
+
 $("play-video").addEventListener("click", () => { if (video.paused) video.play(); else video.pause(); });
 $("aspect").addEventListener("change", () => {
   const value = $("aspect").value;
