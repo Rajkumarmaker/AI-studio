@@ -126,6 +126,25 @@ $("video-file").addEventListener("change", () => {
   $("download-link").hidden = true;
 });
 video.addEventListener("timeupdate", () => $("time-display").textContent = fmt(video.currentTime)+" / "+fmt(video.duration));
+const splitPoints = [];
+function renderSplitMarkers() {
+  $("split-markers").replaceChildren();
+  splitPoints.forEach((point,index) => { const chip=document.createElement("span"); chip.className="split-marker"; chip.textContent="Cut "+(index+1)+" · "+fmt(point); $("split-markers").append(chip); });
+}
+$("mark-split").addEventListener("click", () => {
+  if (!Number.isFinite(video.currentTime) || !video.duration) return;
+  const point=Number(video.currentTime.toFixed(1));
+  if (point <= 0 || point >= video.duration || splitPoints.some(p=>Math.abs(p-point)<0.5)) { $("split-status").textContent="Move the playhead to a new point inside the clip."; return; }
+  splitPoints.push(point); splitPoints.sort((a,b)=>a-b); renderSplitMarkers();
+  $("split-status").textContent="Split marker added at "+fmt(point)+". Markers help plan cuts; export currently renders the selected trim range as one clip.";
+});
+$("video-file").addEventListener("change", () => { $("mark-split").disabled=!$("video-file").files.length; splitPoints.length=0; renderSplitMarkers(); $("split-status").textContent="Move the playhead, then mark a cut."; });
+document.querySelectorAll("[data-edit-tool]").forEach(button => button.addEventListener("click", () => {
+  document.querySelectorAll("[data-edit-tool]").forEach(b=>b.classList.toggle("active",b===button));
+  document.querySelectorAll("[data-tool-pane]").forEach(p=>p.classList.toggle("active",p.dataset.toolPane===button.dataset.editTool));
+}));
+$("video-speed").addEventListener("change", () => { video.playbackRate=Number($("video-speed").value)||1; });
+$("video-filter").addEventListener("change", () => { video.style.filter=$("video-filter").value; });
 $("play-video").addEventListener("click", () => { if (video.paused) video.play(); else video.pause(); });
 $("aspect").addEventListener("change", () => {
   const value = $("aspect").value;
@@ -161,7 +180,7 @@ $("export-video").addEventListener("click", async () => {
     ctx.drawImage(video,(w-dw)/2,(h-dh)/2,dw,dh);
   };
   try {
-    video.pause(); video.currentTime=start;
+    video.pause(); video.playbackRate=Number($("video-speed").value)||1; video.currentTime=start;
     await new Promise(resolve=>video.addEventListener("seeked",resolve,{once:true}));
     recorder.start(250);
     const renderFrame = () => { if(video.currentTime>=end || video.ended){recorder.stop();return;} draw(); requestAnimationFrame(renderFrame); };
