@@ -9,6 +9,7 @@ on:
       - 'public/icons/app-icon.svg'
       - 'public/manifest.webmanifest'
       - 'public/index.html'
+      - 'public/styles.css'
       - 'public/app.js'
       - 'public/sw.js'
       - 'server.js'
