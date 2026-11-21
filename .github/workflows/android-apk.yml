@@ -9,6 +9,9 @@ on:
       - 'public/icons/app-icon.svg'
       - 'public/manifest.webmanifest'
       - 'public/index.html'
+      - 'public/app.js'
+      - 'public/sw.js'
+      - 'server.js'
       - '.github/workflows/android-apk.yml'
 jobs:
   build-debug-apk:
