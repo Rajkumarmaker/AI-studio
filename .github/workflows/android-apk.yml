@@ -30,6 +30,25 @@ jobs:
           java-version: '21'
       - name: Install dependencies
         run: npm install
+      - name: Validate JavaScript and API connectivity
+        run: |
+          node --check public/app.js
+          node --check server.js
+          node -e "JSON.parse(require('fs').readFileSync('public/manifest.webmanifest','utf8'))"
+          PORT=4173 node server.js > /tmp/ai-studio-test.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/ai-studio-health.json; then break; fi
+            sleep 1
+          done
+          node -e "const h=JSON.parse(require('fs').readFileSync('/tmp/ai-studio-health.json','utf8')); if (!h.ok) process.exit(1)"
+          curl -sS -D /tmp/ai-studio-cors.txt -o /dev/null -X OPTIONS \
+            -H 'Origin: https://localhost' \
+            -H 'Access-Control-Request-Method: POST' \
+            -H 'Access-Control-Request-Headers: content-type' \
+            http://127.0.0.1:4173/api/assistant
+          grep -qi 'Access-Control-Allow-Origin: https://localhost' /tmp/ai-studio-cors.txt
       - name: Add Capacitor Android platform
         run: npx cap add android
       - name: Sync Android project
