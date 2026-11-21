@@ -9,6 +9,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
+
+ // Allow the bundled Capacitor Android app to call the hosted API.
+ // Browser/PWA requests remain same-origin and need no CORS headers.
+const nativeOrigins = new Set(["https://localhost", "http://localhost", "capacitor://localhost"]);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && nativeOrigins.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: "8mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
