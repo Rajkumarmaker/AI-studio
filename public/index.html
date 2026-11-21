@@ -22,6 +22,8 @@
       <div class="side-label tools-label">TOOLS</div>
       <button class="nav-item" data-section="text"><span>▤</span> Text to Video</button>
       <button class="nav-item" data-section="image"><span>▧</span> Image to Video</button>
+      <button class="nav-item" data-section="free"><span>◉</span> Free Video Tools</button>
+      <button class="nav-item" data-section="earn"><span>₹</span> Earn with AI-Studio</button>
       <div class="sidebar-bottom">
         <div class="status-card"><span class="status-dot"></span><div><b id="connection-label">Checking services…</b><small id="connection-detail">Connecting to workspace</small></div></div>
         <div class="user-chip"><div class="avatar">D</div><div><b>Creator</b><small>Personal workspace</small></div></div>
@@ -86,6 +88,34 @@
         </div>
       </section>
 
+
+      <section class="view" id="view-free">
+        <div class="section-heading"><div><span class="eyebrow">ZERO-COST CREATOR WORKFLOW</span><h3>Free Video Tools</h3><p class="muted">Create on free provider plans, then bring your clips here to edit. Free quotas belong to your own provider account.</p></div></div>
+        <div class="tool-grid free-grid">
+          <article class="tool-card"><span class="tool-icon blue">G</span><b>Google Flow</b><p>Google lists 50 daily Flow credits for free accounts. Credits and video access depend on model, region and peak-hour availability.</p><a class="card-link" href="https://labs.google/fx/tools/flow" target="_blank" rel="noopener noreferrer">Open Google Flow ↗</a></article>
+          <article class="tool-card"><span class="tool-icon pink">P</span><b>PixVerse</b><p>Check the current free-credit allowance and watermark rules on the provider account before making a commercial video.</p><a class="card-link" href="https://pixverse.ai/" target="_blank" rel="noopener noreferrer">Open PixVerse ↗</a></article>
+        </div>
+        <div class="panel planner free-prompt">
+          <span class="eyebrow">PROMPT BUILDER</span><h4>Write a reusable video prompt</h4>
+          <label for="free-prompt-idea">Video idea</label><textarea id="free-prompt-idea" rows="4" placeholder="Example: African wildlife at sunrise, cheetah running across golden savanna…"></textarea>
+          <label for="free-prompt-format">Format</label><select id="free-prompt-format"><option value="vertical 9:16 social reel">Vertical 9:16 Reel / Short</option><option value="cinematic 16:9 documentary">16:9 YouTube documentary</option><option value="square 1:1 social video">Square 1:1 social video</option></select>
+          <button class="primary" id="free-prompt-build">Build free-tool prompt</button>
+          <div class="plan-result" id="free-prompt-result">Your ready-to-copy prompt will appear here.</div>
+          <button class="ghost" id="free-prompt-copy">Copy prompt</button>
+        </div>
+        <div class="notice"><span>ⓘ</span><p><b>Important:</b> AI-Studio does not bypass free-plan limits or use another person's account. The free providers generate on their own websites; then upload the downloaded clip to AI-Studio for editing. Check each provider's terms and commercial-use permissions before selling or monetizing output.</p></div>
+      </section>
+      <section class="view" id="view-earn">
+        <div class="section-heading"><div><span class="eyebrow">BUILD A CREATOR BUSINESS</span><h3>Earn with AI-Studio</h3><p class="muted">Start with services and digital products; no paid AI video API is required for this business model.</p></div></div>
+        <div class="tool-grid earn-grid">
+          <article class="tool-card"><span class="tool-icon purple">01</span><b>Short-video service</b><p>Create Shorts/Reels for local shops, creators and small businesses using their footage and licensed assets.</p><strong>Starter offer: ₹499–₹999 / reel</strong></article>
+          <article class="tool-card"><span class="tool-icon blue">02</span><b>Digital prompt packs</b><p>Sell original wildlife, kids-story, product-ad and documentary prompt packs with sample scripts.</p><strong>Starter offer: ₹99–₹299 / pack</strong></article>
+          <article class="tool-card"><span class="tool-icon orange">03</span><b>Creator templates</b><p>Sell editable storyboards, shot lists, captions, thumbnail briefs and social-video calendars.</p><strong>Starter offer: ₹149–₹499 / bundle</strong></article>
+          <article class="tool-card"><span class="tool-icon pink">04</span><b>Your own channel</b><p>Publish original videos consistently, build an audience and apply for platform monetization when eligible.</p><strong>Long-term audience income</strong></article>
+        </div>
+        <div class="panel planner earn-panel"><span class="eyebrow">SIMPLE BUSINESS PLAN</span><h4>First 30 days</h4><ol><li><b>Week 1:</b> Make 5 strong sample reels with free provider credits and your own footage.</li><li><b>Week 2:</b> Create 3 sample prompt/template packs and a simple portfolio.</li><li><b>Week 3:</b> Contact 20 local businesses/creators with a sample and a clear price.</li><li><b>Week 4:</b> Deliver first paid orders, collect permission-based testimonials and improve the offer.</li></ol><p class="helper">These are suggested test prices, not guaranteed earnings. Get customer approval and use only media you own or are licensed to use.</p></div>
+        <div class="notice"><span>ⓘ</span><p><b>Payment status:</b> AI-Studio currently does not accept customer payments or provide user accounts/subscriptions. First validate demand with direct client orders. A payment gateway, login, order tracking and legal/tax setup can be added after you choose a payment provider.</p></div>
+      </section>
       <footer>AI-Studio <span>•</span> Creator tools for your next big idea <span class="footer-right">Your files stay in your browser unless you send text to the AI assistant.</span></footer>
     </main>
   </div>
