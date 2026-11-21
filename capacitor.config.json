@@ -1,6 +1,6 @@
 {
   "appId": "com.dileep.aistudio",
-  "appName": "AI-Studio",
+  "appName": "4K AI-Studio",
   "webDir": "public",
   "server": {
     "url": "https://ai-studio-dileep.onrender.com",
