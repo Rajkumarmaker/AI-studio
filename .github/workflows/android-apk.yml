@@ -31,6 +31,12 @@ jobs:
         run: npx cap add android
       - name: Sync Android project
         run: npx cap sync android
+      - name: Generate native Android launcher icons
+        run: |
+          npm install --no-save @capacitor/assets sharp
+          mkdir -p assets
+          node --input-type=module -e "import sharp from 'sharp'; await sharp('public/icons/app-icon.svg').resize(1024, 1024).png().toFile('assets/icon.png');"
+          npx capacitor-assets generate --android
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug
