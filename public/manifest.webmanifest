@@ -1,7 +1,7 @@
 {
-  "name": "AI-Studio 4K",
-  "short_name": "AI-Studio",
-  "description": "AI video creator and editing workspace",
+  "name": "4K AI-Studio",
+  "short_name": "4K AI-Studio",
+  "description": "4K AI-Studio — creative AI video planning and editing workspace",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
