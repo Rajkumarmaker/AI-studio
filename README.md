@@ -88,3 +88,12 @@ Never commit `.env`, API keys, access tokens or private credentials. Use environ
 AI-Studio's free workflow opens third-party creator tools such as Google Flow and PixVerse in the user's own account. It does not automate, scrape, bypass quotas, or proxy free provider credits. Users download their own generated media and import it into the local editor. Provider quotas, access, watermark and commercial-use permissions can change; check each provider's current terms before publishing or selling outputs.
 
 The monetization page is a planning aid, not a live checkout. Suggested revenue paths are client editing services, original prompt/template packs, and audience-building on creator channels. Customer accounts, payment collection, subscriptions and order fulfilment are not implemented yet.
+
+
+## Website + Android app
+
+- The website is installable as a Progressive Web App (PWA) on supported Android browsers.
+- On Android Chrome, open the live site and choose **Install app** / **Add to Home screen**. The app requires internet for server-backed features.
+- A GitHub Actions workflow builds a debug Android APK using Capacitor as a thin Android WebView wrapper pointing to the hosted AI-Studio website. The APK is a test build, not a Play Store release. A signed release requires a private Android signing key and Play Console setup; never commit signing secrets.
+- The service worker caches only the app shell for faster repeat loads. API calls and user content are not cached.
+- PWA installation and the debug APK do not add AI generation credits or paid API costs.
