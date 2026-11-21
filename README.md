@@ -1,103 +1,79 @@
 # 🎬 AI-Studio
 
-> **Next-generation AI video creation and editing suite** — empowering creators worldwide with text-to-video, image-to-video, intelligent editing workflows, and ChatGPT-powered assistance.
+AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning and browser-based clip editing.
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)]()
-[![AI Powered](https://img.shields.io/badge/AI-Video%20%26%20ChatGPT-purple.svg)]()
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)]()
+## What works now
 
----
+- Responsive dark creator dashboard
+- AI assistant endpoint for scripts, storyboards, shot prompts, titles and captions (requires your own OpenAI API key)
+- Text-to-video planning workflow
+- Image-to-video prompt planning workflow with local image preview
+- Local video preview, trim-range controls and browser-side WebM export
+- Health endpoint for deployment checks
+- API keys remain on the server; never place them in frontend code or commit them to Git
 
-## 🌟 Overview
+## Important capability note
 
-**AI-Studio** is an all-in-one creative platform built for content creators, filmmakers, and digital storytellers. Turn ideas into high-impact videos using natural language prompts, animate static visuals, streamline post-production with intelligent AI editing tools, and generate scripts, ideas, and prompts using built-in **ChatGPT (OpenAI)** access.
+This repository does **not** include a video-generation model or paid generation-provider credentials. Text-to-video and image-to-video screens currently prepare production prompts; they do not claim to render AI-generated footage. To enable actual generation, a video provider API and its credentials must be selected and integrated.
 
----
+## Run locally
 
-## ✨ Key Features
+Requirements: Node.js 20+
 
-* **🤖 ChatGPT AI Assistant Access:** Generate video scripts, scene prompts, captions, titles, and creative ideas directly inside the workflow via OpenAI / ChatGPT API.
-* **📝 Text-to-Video Generation:** Transform scripts, ideas, and detailed prompts into dynamic video scenes.
-* **🖼️ Image-to-Video Animation:** Bring static photos, illustrations, and artwork to life with smooth motion and camera controls.
-* **✂️ Smart AI Video Editing:** Accelerate cuts, transitions, scene pacing, and visual enhancements automatically.
-* **🎨 Style & Motion Control:** Customize visual themes, aspect ratios (`16:9`, `9:16`, `1:1`), frame rates, and motion intensity.
-* **⚡ Creator-First Workflow:** Designed for fast previews, effortless iteration, and high-quality exports.
+```bash
+git clone https://github.com/Rajkumarmaker/AI-studio.git
+cd AI-studio
+npm install
+cp .env.example .env
+```
 
----
-
-## 🗺️ Roadmap
-
-- [x] Core project architecture & UI foundation
-- [ ] ChatGPT (OpenAI API) script & prompt assistant integration
-- [ ] Text-to-video generation pipeline
-- [ ] Image-to-video animation & camera motion controls
-- [ ] AI-assisted timeline & smart video editor
-- [ ] Custom presets, batch rendering, and 4K export
-
----
-
-## 🔐 ChatGPT / OpenAI Configuration
-
-Add your OpenAI API key in your environment variables (`.env`) to enable ChatGPT features:
+Add your key to `.env` (keep it private):
 
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
-# 1. Clone the repository
-git clone [https://github.com/your-username/AI-studio.git](https://github.com/your-username/AI-studio.git)
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-4o-mini
+PORT=3000
+```
 
-# 2. Enter the project folder
-cd AI-studio
+Start the app:
 
-# 3. Configure environment variables
-cp .env.example .env
-
-# 4. Install dependencies & run
-npm install
+```bash
 npm run dev
----
+```
 
-### 2. ChatGPT API कोड (JavaScript / Node.js)
+Open http://localhost:3000
 
-पहले इंस्टॉल करें: `npm install openai dotenv`
+## Deploy on Render
 
-```javascript
-import "dotenv/config";
-import OpenAI from "openai";
+Create a **Web Service** connected to this repository.
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+- Branch: `ai-studio`
+- Runtime: Node
+- Build command: `npm install`
+- Start command: `npm start`
+- Add `OPENAI_API_KEY` in the Render Environment settings (optional; needed for AI assistant)
+- Health check path: `/api/health`
 
-export async function generateVideoScriptAndPrompt(idea) {
-  const response = await client.responses.create({
-    model: "gpt-4o-mini",
-    input: `Create a short video script and a visual scene prompt for this idea: ${idea}`,
-  });
+Do not paste API keys into GitHub files or chat.
 
-  return response.output_text;
-}
+## Main files
 
-// Test run
-generateVideoScriptAndPrompt("A space explorer discovering a glowing forest on Mars")
-  .then(console.log)
-  .catch(console.error);import os
-from dotenv import load_dotenv
-from openai import OpenAI
+- `server.js` — Express server and protected OpenAI API route
+- `public/index.html` — app interface
+- `public/styles.css` — responsive styling
+- `public/app.js` — assistant, image preview and browser video editor
+- `.env.example` — safe environment variable template
 
-load_dotenv()
+## Current status
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+- [x] Core UI and responsive navigation
+- [x] OpenAI script/prompt assistant API integration
+- [x] Text-to-video scene planning
+- [x] Image-to-video prompt planning
+- [x] Local video preview and trim export (WebM, browser-dependent)
+- [ ] Actual AI video rendering provider integration
+- [ ] Multi-clip timeline, cloud projects and 4K export
 
-def generate_video_script_and_prompt(idea: str) -> str:
-    response = client.responses.create(
-        model="gpt-4o-mini",
-        input=f"Create a short video script and a visual scene prompt for this idea: {idea}",
-    )
-    return response.output_text
+## Security
 
-if __name__ == "__main__":
-    result = generate_video_script_and_prompt("A space explorer discovering a glowing forest on Mars")
-    print(result)
-
-
+Never commit `.env`, API keys, access tokens or private credentials. Use environment variables in your hosting provider.
