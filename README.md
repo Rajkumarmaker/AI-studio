@@ -7,6 +7,7 @@ AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning 
 - Responsive dark creator dashboard
 - AI assistant endpoint for scripts, storyboards, shot prompts, titles and captions (requires your own OpenAI API key)
 - Text-to-video planning workflow
+- Optional real text-to-video and image-to-video rendering via fal.ai MiniMax H3 Max Turbo (requires FAL_KEY and prepaid credits)
 - Image-to-video prompt planning workflow with local image preview
 - Local video preview, trim-range controls and browser-side WebM export
 - Health endpoint for deployment checks
@@ -14,7 +15,7 @@ AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning 
 
 ## Important capability note
 
-This repository does **not** include a video-generation model or paid generation-provider credentials. Text-to-video and image-to-video screens currently prepare production prompts; they do not claim to render AI-generated footage. To enable actual generation, a video provider API and its credentials must be selected and integrated.
+Real AI video generation is integrated with fal.ai MiniMax H3 Max Turbo. It stays disabled until you add your own FAL_KEY in Render Environment and buy provider credits. The app displays estimated pricing and only sends a billable request after you press Generate. Check current fal.ai pricing before use.
 
 ## Run locally
 
@@ -32,6 +33,7 @@ Add your key to `.env` (keep it private):
 ```env
 OPENAI_API_KEY=your_key_here
 OPENAI_MODEL=gpt-4o-mini
+FAL_KEY=your_fal_key_here
 PORT=3000
 ```
 
@@ -71,7 +73,7 @@ Do not paste API keys into GitHub files or chat.
 - [x] Text-to-video scene planning
 - [x] Image-to-video prompt planning
 - [x] Local video preview and trim export (WebM, browser-dependent)
-- [ ] Actual AI video rendering provider integration
+- [x] fal.ai real AI video generation routes (requires FAL_KEY and provider credits)
 - [ ] Multi-clip timeline, cloud projects and 4K export
 
 ## Security
