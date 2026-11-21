@@ -48,3 +48,6 @@
 
 .preview-caption{position:absolute;left:7%;right:7%;z-index:3;color:#fff;text-align:center;font-weight:800;font-size:clamp(18px,4vw,32px);line-height:1.15;white-space:pre-wrap;text-shadow:0 2px 5px #000,0 0 12px #000;pointer-events:none}
 .preview-caption.pos-top{top:12%}.preview-caption.pos-center{top:50%;transform:translateY(-50%)}.preview-caption.pos-bottom{bottom:12%}
+
+.create-tool-grid{grid-template-columns:repeat(5,1fr)}
+@media(max-width:820px){.create-tool-grid{grid-template-columns:repeat(5,1fr)}}
