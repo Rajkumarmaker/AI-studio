@@ -17,7 +17,7 @@ app.get("/api/health", (_req, res) => {
     ok: true,
     app: "AI-Studio",
     assistantConfigured: Boolean(process.env.OPENAI_API_KEY),
-    videoGeneration: process.env.FAL_KEY ? "fal-ai-configured" : "needs-fal-key"
+    videoGenerationConfigured: Boolean(process.env.FAL_KEY)
   });
 });
 
