@@ -29,7 +29,8 @@ async function checkHealth() {
     const r = await fetch("/api/health");
     const data = await r.json();
     $("connection-label").textContent = data.assistantConfigured ? "AI assistant connected" : "Workspace ready";
-    $("connection-detail").textContent = data.assistantConfigured ? "OpenAI key detected" : "Add an OpenAI key for AI tools";
+    $("connection-detail").textContent = (data.assistantConfigured ? "OpenAI connected" : "OpenAI key needed") + (data.videoGenerationConfigured ? " · Video API connected" : " · Video API key needed");
+    $("provider-notice").innerHTML = data.videoGenerationConfigured ? "<span>✓</span><p><b>Video provider connected:</b> fal.ai is configured. AI video generation is available; each successful generation uses paid provider credits.</p>" : "<span>ⓘ</span><p><b>Generation provider:</b> Add FAL_KEY in Render Environment to enable real AI video rendering. Generation is paid per successful output.</p>";
     $("connection-label").previousElementSibling.style.background = data.assistantConfigured ? "#61d6a1" : "#e3b65d";
   } catch {
     $("connection-label").textContent = "Service unavailable";
