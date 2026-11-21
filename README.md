@@ -1,6 +1,6 @@
-# 🎬 AI-Studio
+# 🎬 4K AI-Studio
 
-AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning and browser-based clip editing.
+4K AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning and browser-based clip editing.
 
 ## What works now
 
@@ -85,7 +85,7 @@ Never commit `.env`, API keys, access tokens or private credentials. Use environ
 
 ## Free video and monetization strategy
 
-AI-Studio's free workflow opens third-party creator tools such as Google Flow and PixVerse in the user's own account. It does not automate, scrape, bypass quotas, or proxy free provider credits. Users download their own generated media and import it into the local editor. Provider quotas, access, watermark and commercial-use permissions can change; check each provider's current terms before publishing or selling outputs.
+4K 4K AI-Studio's free workflow opens third-party creator tools such as Google Flow and PixVerse in the user's own account. It does not automate, scrape, bypass quotas, or proxy free provider credits. Users download their own generated media and import it into the local editor. Provider quotas, access, watermark and commercial-use permissions can change; check each provider's current terms before publishing or selling outputs.
 
 The monetization page is a planning aid, not a live checkout. Suggested revenue paths are client editing services, original prompt/template packs, and audience-building on creator channels. Customer accounts, payment collection, subscriptions and order fulfilment are not implemented yet.
 
