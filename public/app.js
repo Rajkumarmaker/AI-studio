@@ -4,7 +4,7 @@ const API_BASE = window.Capacitor?.isNativePlatform?.() ? "https://ai-studio-dil
 const views = ["studio", "assistant", "editor", "text", "image", "free", "earn", "projects"];
 const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
-let imageUrl = null;
+let imageUrl = null;\nlet musicUrl = null;\nlet musicContext = null;\nlet musicSource = null;\nlet musicGain = null;\nlet musicDestination = null;\nconst musicAudio = new Audio();
 
 function showGeneratedVideo(containerId, url) {
   const container = $(containerId); container.replaceChildren();
@@ -145,6 +145,12 @@ document.querySelectorAll("[data-edit-tool]").forEach(button => button.addEventL
 }));
 $("video-speed").addEventListener("change", () => { video.playbackRate=Number($("video-speed").value)||1; });
 $("video-filter").addEventListener("change", () => { video.style.filter=$("video-filter").value; });
+$("music-file").addEventListener("change", () => {
+  const file=$("music-file").files[0]; if(!file)return;
+  if(musicUrl)URL.revokeObjectURL(musicUrl);
+  musicUrl=URL.createObjectURL(file); musicAudio.src=musicUrl; musicAudio.load();
+  $("music-status").textContent="Ready: "+file.name+" · soundtrack will be mixed on export.";
+});
 function updateCaptionPreview() {
   const caption=$("overlay-text").value.trim(), overlay=$("preview-caption");
   overlay.textContent=caption; overlay.hidden=!caption;
@@ -205,7 +211,7 @@ $("export-video").addEventListener("click", async () => {
     recorder.start(250);
     const renderFrame = () => { if(video.currentTime>=end || video.ended){recorder.stop();return;} draw(); requestAnimationFrame(renderFrame); };
     draw(); video.play(); requestAnimationFrame(renderFrame);
-    await finished; video.pause();
+    await finished; video.pause(); musicAudio.pause(); musicAudio.currentTime=0;
     const blob=new Blob(chunks,{type:"video/webm"});
     const url=URL.createObjectURL(blob);
     const link=$("download-link"); link.href=url; link.download="ai-studio-export.webm"; link.hidden=false;
