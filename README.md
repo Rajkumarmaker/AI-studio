@@ -5,6 +5,8 @@ AI-Studio is a mobile-friendly creator workspace for AI-assisted video planning 
 ## What works now
 
 - Responsive dark creator dashboard
+- Free video-provider launchpad and reusable prompt builder
+- Creator monetization roadmap for services, templates and original channels
 - AI assistant endpoint for scripts, storyboards, shot prompts, titles and captions (requires your own OpenAI API key)
 - Text-to-video planning workflow
 - Optional real text-to-video and image-to-video rendering via fal.ai MiniMax H3 Max Turbo (requires FAL_KEY and prepaid credits)
@@ -79,3 +81,10 @@ Do not paste API keys into GitHub files or chat.
 ## Security
 
 Never commit `.env`, API keys, access tokens or private credentials. Use environment variables in your hosting provider.
+
+
+## Free video and monetization strategy
+
+AI-Studio's free workflow opens third-party creator tools such as Google Flow and PixVerse in the user's own account. It does not automate, scrape, bypass quotas, or proxy free provider credits. Users download their own generated media and import it into the local editor. Provider quotas, access, watermark and commercial-use permissions can change; check each provider's current terms before publishing or selling outputs.
+
+The monetization page is a planning aid, not a live checkout. Suggested revenue paths are client editing services, original prompt/template packs, and audience-building on creator channels. Customer accounts, payment collection, subscriptions and order fulfilment are not implemented yet.
