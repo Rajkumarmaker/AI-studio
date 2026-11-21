@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
-const views = ["studio", "assistant", "editor", "text", "image", "free", "earn"];
-const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio"};
+const views = ["studio", "assistant", "editor", "text", "image", "free", "earn", "projects"];
+const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
 let imageUrl = null;
 
@@ -209,3 +209,47 @@ $("free-prompt-build").addEventListener("click",()=>{
 $("free-prompt-copy").addEventListener("click",async()=>{
  try{await navigator.clipboard.writeText($("free-prompt-result").textContent);$("free-prompt-copy").textContent="Copied ✓";}catch{$("free-prompt-copy").textContent="Select and copy the prompt";}
 });
+
+
+// Local-first project library: data stays in this browser and is never uploaded.
+const PROJECTS_KEY = "ai-studio-local-projects-v1";
+function readProjects() {
+  try { const value = JSON.parse(localStorage.getItem(PROJECTS_KEY) || "[]"); return Array.isArray(value) ? value : []; }
+  catch { return []; }
+}
+function renderProjects() {
+  const list = $("project-list"); const projects = readProjects();
+  $("project-count").textContent = projects.length + (projects.length === 1 ? " project" : " projects");
+  list.replaceChildren();
+  if (!projects.length) { const empty=document.createElement("div"); empty.className="panel muted"; empty.textContent="No saved projects yet. Save your first idea above."; list.append(empty); return; }
+  projects.forEach((project) => {
+    const card=document.createElement("article"); card.className="panel project-card";
+    const info=document.createElement("div");
+    const title=document.createElement("h4"); title.textContent=project.name;
+    const date=document.createElement("small"); date.textContent=new Date(project.updatedAt).toLocaleString();
+    const summary=document.createElement("p"); summary.textContent=(project.idea || project.textIdea || "Saved creative notes").slice(0,220);
+    info.append(title,date,summary);
+    const actions=document.createElement("div"); actions.className="project-actions";
+    const load=document.createElement("button"); load.className="ghost"; load.textContent="Load into workspace";
+    load.addEventListener("click",()=>{ $("idea").value=project.idea||""; $("assistant-output").textContent=project.output||"No assistant output saved."; $("assistant-output").classList.toggle("empty",!project.output); $("text-idea").value=project.textIdea||""; $("text-result").textContent=project.textResult||"Your scene plan will appear here."; $("free-prompt-idea").value=project.freeIdea||""; $("free-prompt-result").textContent=project.freePrompt||"Your ready-to-copy prompt will appear here."; $("project-status").textContent="Loaded: "+project.name; showView("assistant"); });
+    const remove=document.createElement("button"); remove.className="ghost"; remove.textContent="Delete";
+    remove.addEventListener("click",()=>{ if(!confirm("Delete this saved project from this device?")) return; localStorage.setItem(PROJECTS_KEY,JSON.stringify(readProjects().filter(p=>p.id!==project.id))); renderProjects(); $("project-status").textContent="Project deleted from this device."; });
+    actions.append(load,remove); card.append(info,actions); list.append(card);
+  });
+}
+$("save-project").addEventListener("click",()=>{
+  const idea=$("idea").value.trim(), output=$("assistant-output").classList.contains("empty")?"":$("assistant-output").textContent;
+  const textIdea=$("text-idea").value.trim(), textResult=$("text-result").textContent;
+  const freeIdea=$("free-prompt-idea").value.trim(), freePrompt=$("free-prompt-result").textContent;
+  if(!idea&&!output&&!textIdea&&!freeIdea){ $("project-status").textContent="Add an idea or prompt before saving."; return; }
+  const name=$("project-name").value.trim() || (idea||textIdea||freeIdea).slice(0,60) || "Untitled project";
+  const projects=readProjects(); projects.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),name,idea,output,textIdea,textResult,freeIdea,freePrompt,updatedAt:new Date().toISOString()});
+  try { localStorage.setItem(PROJECTS_KEY,JSON.stringify(projects.slice(0,100))); $("project-name").value=""; $("project-status").textContent="Saved on this device. No cloud upload or API charge."; renderProjects(); }
+  catch { $("project-status").textContent="Browser storage is full. Export or delete old projects, then try again."; }
+});
+$("export-projects").addEventListener("click",()=>{
+  const projects=readProjects(); if(!projects.length){$("project-status").textContent="There are no projects to export yet.";return;}
+  const blob=new Blob([JSON.stringify({app:"AI-Studio",exportedAt:new Date().toISOString(),projects},null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="ai-studio-projects.json"; a.click(); URL.revokeObjectURL(url); $("project-status").textContent="Project backup exported. Keep the JSON file somewhere safe.";
+});
+renderProjects();
