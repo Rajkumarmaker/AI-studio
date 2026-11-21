@@ -24,6 +24,7 @@
       <button class="nav-item" data-section="image"><span>▧</span> Image to Video</button>
       <button class="nav-item" data-section="free"><span>◉</span> Free Video Tools</button>
       <button class="nav-item" data-section="earn"><span>₹</span> Earn with AI-Studio</button>
+      <button class="nav-item" data-section="projects"><span>▣</span> My Projects</button>
       <div class="sidebar-bottom">
         <div class="status-card"><span class="status-dot"></span><div><b id="connection-label">Checking services…</b><small id="connection-detail">Connecting to workspace</small></div></div>
         <div class="user-chip"><div class="avatar">D</div><div><b>Creator</b><small>Personal workspace</small></div></div>
@@ -115,6 +116,19 @@
         </div>
         <div class="panel planner earn-panel"><span class="eyebrow">SIMPLE BUSINESS PLAN</span><h4>First 30 days</h4><ol><li><b>Week 1:</b> Make 5 strong sample reels with free provider credits and your own footage.</li><li><b>Week 2:</b> Create 3 sample prompt/template packs and a simple portfolio.</li><li><b>Week 3:</b> Contact 20 local businesses/creators with a sample and a clear price.</li><li><b>Week 4:</b> Deliver first paid orders, collect permission-based testimonials and improve the offer.</li></ol><p class="helper">These are suggested test prices, not guaranteed earnings. Get customer approval and use only media you own or are licensed to use.</p></div>
         <div class="notice"><span>ⓘ</span><p><b>Payment status:</b> AI-Studio currently does not accept customer payments or provide user accounts/subscriptions. First validate demand with direct client orders. A payment gateway, login, order tracking and legal/tax setup can be added after you choose a payment provider.</p></div>
+      </section>
+
+      <section class="view" id="view-projects">
+        <div class="section-heading"><div><span class="eyebrow">YOUR PRIVATE WORKSPACE</span><h3>My Projects</h3><p class="muted">Save ideas, scripts and prompts on this device. No account or paid API required.</p></div></div>
+        <div class="panel planner project-panel">
+          <label for="project-name">Project name</label><input id="project-name" type="text" maxlength="90" placeholder="Example: Wildlife documentary episode 01">
+          <p class="helper">Save your current idea and generated text from the AI Assistant, Text-to-Video planner and Free Prompt Builder.</p>
+          <button class="primary" id="save-project">Save current work on this device</button>
+          <button class="ghost" id="export-projects">Export all projects (JSON)</button>
+          <p class="helper" id="project-status" aria-live="polite">Your saved projects stay in this browser on this device. Clearing browser data may erase them.</p>
+        </div>
+        <div class="section-heading"><div><span class="eyebrow">SAVED LOCALLY</span><h3>Your saved work</h3></div><span class="muted" id="project-count">0 projects</span></div>
+        <div class="project-list" id="project-list"><div class="panel muted">No saved projects yet. Save your first idea above.</div></div>
       </section>
       <footer>AI-Studio <span>•</span> Creator tools for your next big idea <span class="footer-right">Your files stay in your browser unless you send text to the AI assistant.</span></footer>
     </main>
