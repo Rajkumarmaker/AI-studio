@@ -1,4 +1,6 @@
 const $ = (id) => document.getElementById(id);
+// The Android app bundles its interface locally; only API calls go to Render.
+const API_BASE = window.Capacitor?.isNativePlatform?.() ? "https://ai-studio-dileep.onrender.com" : "";
 const views = ["studio", "assistant", "editor", "text", "image", "free", "earn", "projects"];
 const titles = {studio:"Studio overview",assistant:"AI Script Assistant",editor:"Video Editor",text:"Text to Video planner",image:"Image to Video planner",free:"Free Video Tools",earn:"Earn with AI-Studio",projects:"My Projects"};
 let videoUrl = null;
@@ -11,7 +13,7 @@ function showGeneratedVideo(containerId, url) {
   container.append(video,link);
 }
 async function generateVideoRequest(payload) {
-  const response=await fetch("/api/generate-video",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const response=await fetch(`${API_BASE}/api/generate-video",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
   const data=await response.json(); if(!response.ok) throw new Error(data.error||"Video generation failed."); return data;
 }
 function showView(name) {
@@ -26,7 +28,7 @@ $("new-project").addEventListener("click", () => { $("idea").value = ""; $("assi
 
 async function checkHealth() {
   try {
-    const r = await fetch("/api/health");
+    const r = await fetch(`${API_BASE}/api/health");
     const data = await r.json();
     $("connection-label").textContent = data.assistantConfigured ? "AI assistant connected" : "Workspace ready";
     $("connection-detail").textContent = (data.assistantConfigured ? "OpenAI connected" : "OpenAI key needed") + (data.videoGenerationConfigured ? " · Video API connected" : " · Video API key needed");
@@ -40,7 +42,7 @@ async function checkHealth() {
 checkHealth();
 
 async function requestAssistant(idea, task, duration=30, style="cinematic documentary") {
-  const response = await fetch("/api/assistant", {
+  const response = await fetch(`${API_BASE}/api/assistant", {
     method:"POST", headers:{"Content-Type":"application/json"},
     body:JSON.stringify({idea,task,duration,style})
   });
@@ -94,7 +96,7 @@ $("image-plan").addEventListener("click", async () => {
       reader.onerror = () => reject(new Error("Could not read this image."));
       reader.readAsDataURL(file);
     });
-    const response = await fetch("/api/image-prompt", {
+    const response = await fetch(`${API_BASE}/api/image-prompt", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ image: imageData, motion: $("motion-prompt").value, camera: $("camera-motion").value })
     });
@@ -273,3 +275,10 @@ if (installButton) installButton.addEventListener("click", async () => {
 });
 window.addEventListener("appinstalled", () => { if (installButton) installButton.hidden = true; });
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+
+
+// Install the offline web shell for browser/PWA users. Native Android already
+// ships the interface inside the APK and uses the hosted API only for AI work.
+if ("serviceWorker" in navigator && !window.Capacitor?.isNativePlatform?.()) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
