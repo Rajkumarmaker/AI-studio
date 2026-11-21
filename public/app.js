@@ -13,7 +13,7 @@ function showGeneratedVideo(containerId, url) {
   container.append(video,link);
 }
 async function generateVideoRequest(payload) {
-  const response=await fetch(`${API_BASE}/api/generate-video",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const response=await fetch(`${API_BASE}/api/generate-video`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
   const data=await response.json(); if(!response.ok) throw new Error(data.error||"Video generation failed."); return data;
 }
 function showView(name) {
@@ -28,7 +28,7 @@ $("new-project").addEventListener("click", () => { $("idea").value = ""; $("assi
 
 async function checkHealth() {
   try {
-    const r = await fetch(`${API_BASE}/api/health");
+    const r = await fetch(`${API_BASE}/api/health`);
     const data = await r.json();
     $("connection-label").textContent = data.assistantConfigured ? "AI assistant connected" : "Workspace ready";
     $("connection-detail").textContent = (data.assistantConfigured ? "OpenAI connected" : "OpenAI key needed") + (data.videoGenerationConfigured ? " · Video API connected" : " · Video API key needed");
@@ -42,7 +42,7 @@ async function checkHealth() {
 checkHealth();
 
 async function requestAssistant(idea, task, duration=30, style="cinematic documentary") {
-  const response = await fetch(`${API_BASE}/api/assistant", {
+  const response = await fetch(`${API_BASE}/api/assistant`, {
     method:"POST", headers:{"Content-Type":"application/json"},
     body:JSON.stringify({idea,task,duration,style})
   });
@@ -96,7 +96,7 @@ $("image-plan").addEventListener("click", async () => {
       reader.onerror = () => reject(new Error("Could not read this image."));
       reader.readAsDataURL(file);
     });
-    const response = await fetch(`${API_BASE}/api/image-prompt", {
+    const response = await fetch(`${API_BASE}/api/image-prompt`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ image: imageData, motion: $("motion-prompt").value, camera: $("camera-motion").value })
     });
